@@ -1,4 +1,5 @@
 'use client';
+import { useState } from 'react';
 import { siteConfig } from '@/config/site.config';
 import {
   Navbar,
@@ -11,6 +12,9 @@ import {
 import Image from 'next/image';
 import NextLink from 'next/link';
 import { usePathname } from 'next/navigation';
+import { layoutConfig } from '@/config/layout.config';
+import RegistrationModal from '../modals/registration.modal';
+import LoginModal from '../modals/login.modal';
 
 export const Logo = () => {
   return (
@@ -26,8 +30,11 @@ export const Logo = () => {
 };
 
 export default function Header() {
+  const [isRegistrationOpen, setIsRegistrationOpen] = useState(false);
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
   const pathname = usePathname();
-  const getnavItems = () => {
+
+  const getNavItems = () => {
     return siteConfig.navItems.map((item) => {
       const isActive = pathname === item.href;
       return (
@@ -36,11 +43,10 @@ export default function Header() {
             color="foreground"
             href={item.href}
             className={`px-3 py-1
-                            ${isActive ? 'text-blue-500' : 'text-foreground'}
-                            hover:text-blue-300 hover:border
-                            hover:border-blue-300 hover:rounded-md
-                            transition-colors transition-border
-                            duration-200`}
+              ${isActive ? 'text-blue-500' : 'text-foreground'}
+              hover:text-blue-300 hover:border
+              hover:border-blue-300 hover:rounded-md
+              transition-colors duration-200`}
           >
             {item.label}
           </Link>
@@ -50,8 +56,10 @@ export default function Header() {
   };
 
   return (
-    <Navbar className="dark bg-gray-600">
-
+    <Navbar
+      className="dark bg-gray-600"
+      style={{ height: layoutConfig.headerHeight }}
+    >
       <NavbarBrand>
         <NextLink href="/" className="flex gap-2">
           <Logo />
@@ -60,22 +68,31 @@ export default function Header() {
       </NavbarBrand>
 
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
-        {getnavItems()}
+        {getNavItems()}
       </NavbarContent>
 
       <NavbarContent justify="end">
-
         <NavbarItem className="hidden lg:flex">
-          <Link href="#">Login</Link>
+          <Link href="#" onPress={() => setIsLoginOpen(true)}>
+            Login
+          </Link>
         </NavbarItem>
-
         <NavbarItem>
-          <Button as={Link} color="primary" href="#" variant="flat">
+          <Button
+            color="primary"
+            variant="flat"
+            onPress={() => setIsRegistrationOpen(true)}
+          >
             Sign Up
           </Button>
         </NavbarItem>
-        
       </NavbarContent>
+
+      <RegistrationModal
+        isOpen={isRegistrationOpen}
+        onClose={() => setIsRegistrationOpen(false)}
+      />
+      <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
     </Navbar>
   );
 }
