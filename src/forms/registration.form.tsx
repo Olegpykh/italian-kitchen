@@ -1,6 +1,8 @@
 'use client';
 import { Button, Form, Input } from '@heroui/react';
 import { useState } from 'react';
+import { registerUser } from '@/actions/register';
+
 
 const validateEmail = (email: string) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -18,10 +20,13 @@ export default function RegisterForm({ onClose }: RegisterFormProps) {
     confirmPassword: '',
   });
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) return;
+
+    await registerUser(formData);
     console.log(formData);
+    
     onClose?.();
   };
 

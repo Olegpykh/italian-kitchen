@@ -1,5 +1,5 @@
 'use client';
-import CustomModal from '../common/ modal';
+import CustomModal from '../common/modal';
 import RegisterForm from '@/forms/registration.form';
 
 interface IProps {
