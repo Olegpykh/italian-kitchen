@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import { useSession } from 'next-auth/react';
 import { siteConfig } from '@/config/site.config';
 import {
   Navbar,
@@ -11,28 +12,34 @@ import {
 } from '@heroui/react';
 import Image from 'next/image';
 import NextLink from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { layoutConfig } from '@/config/layout.config';
-import RegistrationModal from '../modals/registration.modal';
-import LoginModal from '../modals/login.modal';
+import RegistrationModal from '@/components/UI/modals/registration.modal';
+import LoginModal from '@/components/UI/modals/login.modal';
+import { signOutUser } from '@/actions/sign-out';
 
-export const Logo = () => {
-  return (
-    <Image
-      src="/logo_italy_kitchen.png"
-      alt={siteConfig.title}
-      width={26}
-      height={26}
-      sizes="(max-width: 768px) 20px, 26px"
-      priority
-    />
-  );
-};
+export const Logo = () => (
+  <Image
+    src="/logo_italy_kitchen.png"
+    alt={siteConfig.title}
+    width={26}
+    height={26}
+    sizes="(max-width: 768px) 20px, 26px"
+    priority
+  />
+);
 
 export default function Header() {
+  const pathname = usePathname();
+  const router = useRouter();
+  const { data: session } = useSession();
   const [isRegistrationOpen, setIsRegistrationOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
-  const pathname = usePathname();
+
+  const handleSignOut = async () => {
+    await signOutUser();
+    router.refresh();
+  };
 
   const getNavItems = () => {
     return siteConfig.navItems.map((item) => {
@@ -72,20 +79,41 @@ export default function Header() {
       </NavbarContent>
 
       <NavbarContent justify="end">
-        <NavbarItem className="hidden lg:flex">
-          <Link href="#" onPress={() => setIsLoginOpen(true)}>
-            Login
-          </Link>
-        </NavbarItem>
-        <NavbarItem>
-          <Button
-            color="primary"
-            variant="flat"
-            onPress={() => setIsRegistrationOpen(true)}
-          >
-            Sign Up
-          </Button>
-        </NavbarItem>
+        {session ? (
+          <>
+            <NavbarItem>
+              <span className="text-sm text-foreground">
+                Hello, {session.user?.email}
+              </span>
+            </NavbarItem>
+            <NavbarItem>
+              <Button color="secondary" variant="flat" onPress={handleSignOut}>
+                Sign Out
+              </Button>
+            </NavbarItem>
+          </>
+        ) : (
+          <>
+            <NavbarItem>
+              <Button
+                color="secondary"
+                variant="flat"
+                onPress={() => setIsLoginOpen(true)}
+              >
+                Login
+              </Button>
+            </NavbarItem>
+            <NavbarItem>
+              <Button
+                color="primary"
+                variant="flat"
+                onPress={() => setIsRegistrationOpen(true)}
+              >
+                Sign Up
+              </Button>
+            </NavbarItem>
+          </>
+        )}
       </NavbarContent>
 
       <RegistrationModal

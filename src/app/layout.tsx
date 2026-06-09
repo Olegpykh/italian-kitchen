@@ -5,12 +5,10 @@ import { Providers } from '@/providers/provider';
 import Header from '@/components/UI/layout/header';
 import { siteConfig } from '@/config/site.config';
 import { layoutConfig } from '@/config/layout.config';
+import { SessionProvider } from 'next-auth/react';
+import { auth } from '@/auth/auth';
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-});
-
+const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] });
 const geistMono = Geist_Mono({
   variable: '--font-geist-mono',
   subsets: ['latin'],
@@ -21,34 +19,35 @@ export const metadata: Metadata = {
   description: siteConfig.description,
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
+  const session = await auth();
   return (
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <Providers>
-          <Header />
-          <main
-            className="flex flex-col w-full justify-start items-center"
-            style={{
-              height: `calc(100vh - ${layoutConfig.footerHeight} - ${layoutConfig.headerHeight})`,
-            }}
-          >
-            {children}
-          </main>
-          <footer
-            className="flex justify-center items-center"
-            style={{ height: layoutConfig.footerHeight }}
-          >
-            <h1>{siteConfig.description}</h1>
-          </footer>
-        </Providers>
+        <SessionProvider session={session}>
+          <Providers>
+            <Header />
+            <main
+              className="flex flex-col w-full justify-start items-center"
+              style={{
+                height: `calc(100vh - ${layoutConfig.footerHeight} - ${layoutConfig.headerHeight})`,
+              }}
+            >
+              {children}
+            </main>
+            <footer
+              className="flex justify-center items-center border-t"
+              style={{ height: layoutConfig.footerHeight }}
+            >
+              <p className="text-sm text-gray-500">{siteConfig.description}</p>
+            </footer>
+          </Providers>
+        </SessionProvider>
       </body>
     </html>
   );

@@ -1,26 +1,25 @@
 'use client';
 import { Button, Form, Input } from '@heroui/react';
 import { useState } from 'react';
+import { signInWithCredentials } from '@/actions/sign-in';
+import { useRouter } from 'next/navigation';
 
-const validateEmail = (email: string) => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
-};
-
-interface LoginFormProps {
+interface IProps {
   onClose?: () => void;
 }
 
-export default function LoginForm({ onClose }: LoginFormProps) {
+const LoginForm = ({ onClose }: IProps) => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
+  const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(formData);
+    await signInWithCredentials(formData.email, formData.password);
     onClose?.();
+    router.refresh();
   };
 
   return (
@@ -41,7 +40,6 @@ export default function LoginForm({ onClose }: LoginFormProps) {
         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
         validate={(value) => {
           if (!value) return 'Email is required';
-          if (!validateEmail(value)) return 'Please enter a valid email';
           return null;
         }}
       />
@@ -74,4 +72,6 @@ export default function LoginForm({ onClose }: LoginFormProps) {
       </div>
     </Form>
   );
-}
+};
+
+export default LoginForm;

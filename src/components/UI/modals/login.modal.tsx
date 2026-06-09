@@ -1,5 +1,5 @@
 'use client';
-import CustomModal from '../common/modal';
+import CustomModal from '../../common/modal';
 import LoginForm from '@/forms/login.form';
 
 interface IProps {
