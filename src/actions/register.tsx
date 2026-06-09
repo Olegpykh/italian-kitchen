@@ -1,24 +1,38 @@
 'use server';
 
-import { PrismaClient } from '@/generated/prisma/client';
-import { PrismaPg } from '@prisma/adapter-pg';
 import { IFormData } from '@/types/form-data';
-
-const adapter = new PrismaPg({
-  connectionString: process.env.DATABASE_URL as string,
-});
-const prisma = new PrismaClient({ adapter });
+import { saltAndHashPassword } from '@/utils/password';
+import { prisma } from '@/utils/prisma';
 
 export async function registerUser(formData: IFormData) {
-  const { email, password } = formData;
+  const { email, password, confirmPassword } = formData;
 
+  if (password !== confirmPassword) {
+    return { error: 'Passwords do not match' };
+  }
 
+  if (password.length < 6) {
+    return { error: 'Password must be at least 6 characters' };
+  }
 
   try {
-    const user = await (prisma as any).user.create({
-      data: { email, password },
+    const existingUser = await (prisma as any).user.findUnique({
+      where: { email },
     });
-    console.log('user', user);
+
+    if (existingUser) {
+      return { error: 'User with this email already exists' };
+    }
+
+    const pwHash = await saltAndHashPassword(password);
+
+    const user = await (prisma as any).user.create({
+      data: {
+        email,
+        password: pwHash,
+      },
+    });
+
     return user;
   } catch (error) {
     console.error('Registration error:', error);
