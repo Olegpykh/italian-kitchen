@@ -1,4 +1,4 @@
-import { object, string, number } from 'zod';
+import { object, string, number, coerce } from 'zod';
 
 export const signInSchema = object({
   email: string({ required_error: 'Email is required' })
@@ -17,6 +17,6 @@ export const ingredientSchema = object({
   ),
   category: string().optional(),
   unit: string().optional(),
-  pricePerUnit: number().optional().nullable(),
+  pricePerUnit: coerce.number().optional().nullable(),
   description: string().optional(),
 });

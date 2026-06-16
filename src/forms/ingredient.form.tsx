@@ -19,9 +19,19 @@ const IngredientForm = () => {
   const { addIngredient } = useIngredientStore();
   const [isPending, startTransition] = useTransition();
 
-  const handleSubmit = async (formData: FormData) => {
+  const handleSubmit = async (fd: FormData) => {
     startTransition(async () => {
-      await addIngredient(formData);
+      const manualFormData = new FormData();
+      manualFormData.append('name', formData.name);
+      manualFormData.append('category', formData.category);
+      manualFormData.append('unit', formData.unit);
+      manualFormData.append(
+        'pricePerUnit',
+        formData.pricePerUnit?.toString() ?? ''
+      );
+      manualFormData.append('description', formData.description);
+
+      await addIngredient(manualFormData);
       const storeError = useIngredientStore.getState().error;
       if (storeError) {
         setError(storeError);

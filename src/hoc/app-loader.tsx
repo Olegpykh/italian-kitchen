@@ -12,23 +12,18 @@ interface IProps {
 
 const AppLoader = ({ children }: IProps) => {
   const { data: session, status } = useSession();
-  const { loadIngredients } = useIngredientStore();
   const { isAuth, setAuthState } = useAuthStore();
-  const { loadRecipes } = useRecipeStore();
 
   useEffect(() => {
     setAuthState(status, session);
-  }, [status, session, setAuthState]);
+  }, [status, session]);
 
   useEffect(() => {
     if (isAuth) {
-      loadIngredients();
+      useIngredientStore.getState().loadIngredients();
+      useRecipeStore.getState().loadRecipes();
     }
-  }, [isAuth, loadIngredients]);
-
-  useEffect(() => {
-    loadRecipes();
-  }, [loadRecipes]);
+  }, [isAuth]);
 
   return <>{children}</>;
 };

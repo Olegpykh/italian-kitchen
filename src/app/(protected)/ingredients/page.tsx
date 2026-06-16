@@ -1,3 +1,4 @@
+import IngredientsTable from '@/components/UI/tables/Ingredients';
 import IngredientForm from '@/forms/ingredient.form';
 
 const IngredientsPage = () => {
@@ -7,6 +8,7 @@ const IngredientsPage = () => {
       <p className="text-gray-400 mb-8">Manage your ingredients collection</p>
       <div className="w-full max-w-2xl flex flex-col gap-6">
         <IngredientForm />
+        <IngredientsTable />
       </div>
     </div>
   );

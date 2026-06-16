@@ -5,6 +5,8 @@ import { prisma } from '@/utils/prisma';
 import { ZodError } from 'zod';
 
 export async function createIngredient(formData: FormData) {
+    console.log('formData entries:', Object.fromEntries(formData.entries()));
+    console.log('name:', formData.get('name'));
   try {
     const data = {
       name: formData.get('name') as string,
