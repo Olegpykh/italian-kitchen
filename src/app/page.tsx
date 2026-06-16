@@ -3,9 +3,14 @@ import RecipeCard from '@/components/common/recipe-card';
 import { useRecipeStore } from '@/store/recipe.store';
 import { Button } from '@heroui/react';
 import Link from 'next/link';
+import { useEffect } from 'react';
 
 export default function Home() {
   const { recipes, isLoading, error } = useRecipeStore();
+
+  useEffect(() => {
+    useRecipeStore.getState().loadRecipes();
+  }, []);
 
   return (
     <div className="flex flex-col items-center w-full py-16 px-6">

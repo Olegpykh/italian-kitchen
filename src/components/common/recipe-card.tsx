@@ -23,7 +23,7 @@ const RecipeCard = ({ recipe }: RecipeCardProps) => {
       try {
         await removeRecipe(recipe.id);
       } catch (error) {
-        console.error('Ошибка при удалении рецепта:', error);
+        console.error('Error deleting recipe:', error);
       }
     });
   };
@@ -36,57 +36,58 @@ const RecipeCard = ({ recipe }: RecipeCardProps) => {
   };
 
   return (
-    <Card className="w-full min-w-[254px] max-w-md h-[480px] flex flex-col">
-      <div className="h-48 overflow-hidden">
+    <Card className="w-full max-w-md flex flex-col rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+      <div className="h-48 overflow-hidden rounded-t-2xl">
         {recipe.imageUrl ? (
-          <div className="relative h-48 group overflow-hidden rounded-lg border border-gray-200 bg-white shadow-md transition-all hover:shadow-lg">
+          <div className="relative h-48 overflow-hidden">
             <Image
               src={recipe.imageUrl}
-              alt="Image for recipe"
+              alt={recipe.name}
               fill
-              className="object-cover transition-transform duration-300 group-hover:scale-105"
+              className="object-cover transition-transform duration-300 hover:scale-105"
             />
           </div>
         ) : (
-          <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-            <span className="text-gray-500">Нет изображения</span>
+          <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+            <span className="text-4xl">🍝</span>
           </div>
         )}
       </div>
 
-      <CardHeader className="flex justify-between items-center text-black">
-        <h2 className="text-xl font-bold">{recipe.name}</h2>
+      <CardHeader className="flex justify-between items-center text-black px-4 pt-4 pb-0">
+        <h2 className="text-xl font-bold tracking-tight">{recipe.name}</h2>
       </CardHeader>
 
-      <CardBody className="flex-1 text-black">
-        <p className="text-gray-600 line-clamp-6">
-          {recipe.description || 'Без описания'}
+      <CardBody className="flex-1 text-black px-4 py-3">
+        <p className="text-gray-500 text-sm line-clamp-2 mb-3">
+          {recipe.description || 'No description'}
         </p>
-        <h3 className="mt-4 font-semibold">Ингредиенты:</h3>
-        <ul className="list-disc pl-5 overflow-y-auto max-h-24">
+        <h3 className="font-semibold text-sm mb-2">Ingredients:</h3>
+        <ul className="list-disc pl-5 text-sm text-gray-600 space-y-1 line-clamp-3">
           {recipe.ingredients.map((ing) => (
             <li key={ing.id}>
               {ing.ingredient.name}: {ing.quantity}{' '}
-              {getUnitLabel(ing.ingredient.unit)}
+              {getUnitLabel(ing.ingredient.unit ?? '')}
             </li>
           ))}
         </ul>
       </CardBody>
 
       {isAuth && (
-        <div className="flex justify-end gap-2 p-4">
+        <div className="flex justify-end gap-2 p-4 pt-0">
           <Link href={`/recipes/${recipe.id}`}>
-            <Button color="primary" variant="light">
-              Редактировать
+            <Button color="primary" variant="light" size="sm">
+              Edit
             </Button>
           </Link>
           <Button
             color="danger"
             variant="light"
+            size="sm"
             onPress={handleDelete}
             isLoading={isPending}
           >
-            Удалить
+            Delete
           </Button>
         </div>
       )}

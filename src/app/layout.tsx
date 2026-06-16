@@ -4,7 +4,6 @@ import './globals.css';
 import { Providers } from '@/providers/provider';
 import Header from '@/components/UI/layout/header';
 import { siteConfig } from '@/config/site.config';
-import { layoutConfig } from '@/config/layout.config';
 import { SessionProvider } from 'next-auth/react';
 import { auth } from '@/auth/auth';
 
@@ -26,24 +25,16 @@ export default async function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-screen flex flex-col">
         <SessionProvider session={session}>
           <Providers>
             <Header />
-            <main
-              className="flex flex-col w-full justify-start items-center"
-              style={{
-                height: `calc(100vh - ${layoutConfig.footerHeight} - ${layoutConfig.headerHeight})`,
-              }}
-            >
+            <main className="flex flex-col w-full justify-start items-center flex-1">
               {children}
             </main>
-            <footer
-              className="flex justify-center items-center border-t"
-              style={{ height: layoutConfig.footerHeight }}
-            >
+            <footer className="flex justify-center items-center border-t h-[60px]">
               <p className="text-sm text-gray-500">{siteConfig.description}</p>
             </footer>
           </Providers>

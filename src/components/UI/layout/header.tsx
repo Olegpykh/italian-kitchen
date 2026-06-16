@@ -2,14 +2,7 @@
 import { useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { siteConfig } from '@/config/site.config';
-import {
-  Navbar,
-  NavbarBrand,
-  NavbarContent,
-  NavbarItem,
-  Button,
-  Link,
-} from '@heroui/react';
+import { Button } from '@heroui/react';
 import Image from 'next/image';
 import NextLink from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
@@ -38,89 +31,80 @@ export default function Header() {
 
   const handleSignOut = async () => {
     await signOutUser();
-    router.refresh();
-  };
-
-  const getNavItems = () => {
-    return siteConfig.navItems.map((item) => {
-      const isActive = pathname === item.href;
-      return (
-        <NavbarItem key={item.href}>
-          <Link
-            color="foreground"
-            href={item.href}
-            className={`px-3 py-1
-              ${isActive ? 'text-blue-500' : 'text-foreground'}
-              hover:text-blue-300 hover:border
-              hover:border-blue-300 hover:rounded-md
-              transition-colors duration-200`}
-          >
-            {item.label}
-          </Link>
-        </NavbarItem>
-      );
-    });
+    window.location.reload();
   };
 
   return (
-    <Navbar
-      className="dark bg-gray-600"
-      style={{ height: layoutConfig.headerHeight }}
-    >
-      <NavbarBrand>
-        <NextLink href="/" className="flex gap-2">
+    <header className="w-full border-b" style={{ height: '80px' }}>
+      <div className="max-w-7xl mx-auto px-6 h-full flex justify-between items-center">
+        {/* Logo */}
+        <NextLink href="/" className="flex items-center gap-2">
           <Logo />
-          <p className="font-bold text-inherit">{siteConfig.title}</p>
+          <span className="font-bold text-lg">{siteConfig.title}</span>
         </NextLink>
-      </NavbarBrand>
 
-      <NavbarContent className="hidden sm:flex gap-4" justify="center">
-        {getNavItems()}
-      </NavbarContent>
+        {/* Nav */}
+        <nav className="flex gap-6">
+          {siteConfig.navItems.map((item) => {
+            const isActive = pathname === item.href;
+            return (
+              <NextLink
+                key={item.href}
+                href={item.href}
+                className={`text-sm transition-colors hover:text-blue-500 ${
+                  isActive ? 'text-blue-500 font-semibold' : 'text-gray-500'
+                }`}
+              >
+                {item.label}
+              </NextLink>
+            );
+          })}
+        </nav>
 
-      <NavbarContent justify="end">
-        {session ? (
-          <>
-            <NavbarItem>
-              <span className="text-sm text-foreground">
+        {/* Auth */}
+        <div className="flex items-center gap-3">
+          {session ? (
+            <>
+              <span className="text-sm text-gray-500">
                 Hello, {session.user?.email}
               </span>
-            </NavbarItem>
-            <NavbarItem>
-              <Button color="secondary" variant="flat" onPress={handleSignOut}>
-                Sign Out
-              </Button>
-            </NavbarItem>
-          </>
-        ) : (
-          <>
-            <NavbarItem>
               <Button
+                size="sm"
                 color="secondary"
                 variant="flat"
+                onPress={handleSignOut}
+              >
+                Sign Out
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                size="sm"
+                variant="flat"
+                color="secondary"
                 onPress={() => setIsLoginOpen(true)}
               >
                 Login
               </Button>
-            </NavbarItem>
-            <NavbarItem>
               <Button
+                size="sm"
                 color="primary"
                 variant="flat"
                 onPress={() => setIsRegistrationOpen(true)}
               >
                 Sign Up
               </Button>
-            </NavbarItem>
-          </>
-        )}
-      </NavbarContent>
+            </>
+          )}
+        </div>
+      </div>
 
       <RegistrationModal
         isOpen={isRegistrationOpen}
         onClose={() => setIsRegistrationOpen(false)}
       />
       <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
-    </Navbar>
+    </header>
   );
 }

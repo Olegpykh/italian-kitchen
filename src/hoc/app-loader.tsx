@@ -19,9 +19,12 @@ const AppLoader = ({ children }: IProps) => {
   }, [status, session]);
 
   useEffect(() => {
+    useRecipeStore.getState().loadRecipes();
+  }, []);
+
+  useEffect(() => {
     if (isAuth) {
       useIngredientStore.getState().loadIngredients();
-      useRecipeStore.getState().loadRecipes();
     }
   }, [isAuth]);
 

@@ -15,12 +15,12 @@ const LoginForm = ({ onClose }: IProps) => {
   });
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    await signInWithCredentials(formData.email, formData.password);
-    onClose?.();
-    router.refresh();
-  };
+ const handleSubmit = async (e: React.FormEvent) => {
+   e.preventDefault();
+   await signInWithCredentials(formData.email, formData.password);
+   onClose?.();
+   window.location.reload();
+ };
 
   return (
     <Form className="w-full flex flex-col gap-4" onSubmit={handleSubmit}>
