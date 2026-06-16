@@ -10,10 +10,8 @@ A full-stack recipe management app built with Next.js 15, featuring authenticati
 
 <table>
   <tr>
-    <td><img src="<img width="1440" height="778" alt="Bildschirmfoto 2026-06-16 um 22 10 37" src="https://github.com/user-attachments/assets/96af310c-922d-4d97-ac76-e5fba305ddda" />
-" width="500"/></td>
-    <td><img src="<img width="1438" height="778" alt="Bildschirmfoto 2026-06-16 um 22 13 52" src="https://github.com/user-attachments/assets/22137ea6-fb75-4c6f-9cf1-a208904c67b6" />
-" width="500"/></td>
+    <td><img src="https://github.com/user-attachments/assets/96af310c-922d-4d97-ac76-e5fba305ddda" width="500"/></td>
+    <td><img src="https://github.com/user-attachments/assets/22137ea6-fb75-4c6f-9cf1-a208904c67b6" width="500"/></td>
   </tr>
 </table>
 
