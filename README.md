@@ -1,36 +1,51 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🍝 Italian Kitchen
 
-## Getting Started
+A full-stack recipe management app built with Next.js 15, featuring authentication, ingredient management, and recipe creation.
 
-First, run the development server:
+[Live Demo](https://italian-kitchen.vercel.app)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+<div align="center">
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Screenshots
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+<table>
+  <tr>
+    <td><img src="<img width="1440" height="778" alt="Bildschirmfoto 2026-06-16 um 22 10 37" src="https://github.com/user-attachments/assets/96af310c-922d-4d97-ac76-e5fba305ddda" />
+" width="500"/></td>
+    <td><img src="<img width="1438" height="778" alt="Bildschirmfoto 2026-06-16 um 22 13 52" src="https://github.com/user-attachments/assets/22137ea6-fb75-4c6f-9cf1-a208904c67b6" />
+" width="500"/></td>
+  </tr>
+</table>
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+</div>
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## Tech Stack
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| Category | Technology | Description |
+|----------|-----------|-------------|
+| Framework | **Next.js 16** | App Router, Server Actions, Server Components |
+| Language | **TypeScript** | Strict type safety throughout |
+| Database | **PostgreSQL** (Prisma Cloud) | Hosted PostgreSQL database |
+| ORM | **Prisma 7** | Type-safe database client with migrations |
+| Auth | **Auth.js v5 (NextAuth)** | Credentials provider with JWT sessions |
+| UI | **HeroUI v2** | Component library built on top of Tailwind |
+| Styling | **Tailwind CSS v4** | Utility-first CSS framework |
+| State | **Zustand** | Lightweight global state management |
+| Validation | **Zod** | Schema validation for forms and API |
+| Deployment | **Vercel** | Edge-network production deployment |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## Features
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- 🔐 **Authentication** — Register and sign in with email/password
+- 🧄 **Ingredients** — Add, view and delete ingredients with category, unit and price
+- 🍝 **Recipes** — Create recipes with images, descriptions and ingredients
+- 📱 **Responsive** — Works on all screen sizes
+- ⚡ **Fast** — Server Actions for mutations, Zustand for client state
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## Architecture
