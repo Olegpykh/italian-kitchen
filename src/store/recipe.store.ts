@@ -17,6 +17,11 @@ interface IRecipeState {
   recipes: IRecipe[];
   isLoading: boolean;
   error: string | null;
+  // True once the store has been seeded from server-fetched data (see
+  // hydrate() below) — lets consumers know whether to trust `recipes`
+  // yet, without needing a duplicate local React state for it.
+  hydrated: boolean;
+  hydrate: (recipes: IRecipe[]) => void;
   loadRecipes: () => Promise<void>;
   addRecipe: (formData: FormData) => Promise<IActionResult>;
   updateRecipe: (id: string, formData: FormData) => Promise<IActionResult>;
@@ -27,6 +32,12 @@ export const useRecipeStore = create<IRecipeState>((set) => ({
   recipes: [],
   isLoading: false,
   error: null,
+  hydrated: false,
+  // Seeds the store with data already fetched on the server (see
+  // src/app/page.tsx), so the client doesn't need to re-fetch on mount.
+  hydrate: (recipes: IRecipe[]) => {
+    set({ recipes, hydrated: true, isLoading: false, error: null });
+  },
   loadRecipes: async () => {
     set({ isLoading: true, error: null });
 

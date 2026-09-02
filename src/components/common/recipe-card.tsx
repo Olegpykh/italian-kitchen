@@ -11,9 +11,10 @@ import { useAuthStore } from '@/store/auth.store';
 
 interface RecipeCardProps {
   recipe: IRecipe;
+  priority?: boolean;
 }
 
-const RecipeCard = ({ recipe }: RecipeCardProps) => {
+const RecipeCard = ({ recipe, priority = false }: RecipeCardProps) => {
   const { removeRecipe } = useRecipeStore();
   const { isAuth } = useAuthStore();
   const [isPending, startTransition] = useTransition();
@@ -37,45 +38,50 @@ const RecipeCard = ({ recipe }: RecipeCardProps) => {
 
   return (
     <Card className="w-full max-w-md flex flex-col rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
-      <div className="h-48 overflow-hidden rounded-t-2xl">
-        {recipe.imageUrl ? (
-          <div className="relative h-48 overflow-hidden">
-            <Image
-              src={recipe.imageUrl}
-              alt={recipe.name}
-              fill
-              className="object-cover transition-transform duration-300 hover:scale-105"
-            />
-          </div>
-        ) : (
-          <div className="w-full h-full bg-gray-100 flex items-center justify-center">
-            <span className="text-4xl">🍝</span>
-          </div>
-        )}
-      </div>
+      <Link href={`/recipes/${recipe.id}`} className="block">
+        <div className="h-48 overflow-hidden rounded-t-2xl">
+          {recipe.imageUrl ? (
+            <div className="relative h-48 overflow-hidden">
+              <Image
+                src={recipe.imageUrl}
+                alt={recipe.name}
+                fill
+                priority={priority}
+                loading={priority ? undefined : 'lazy'}
+                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                className="object-cover transition-transform duration-300 hover:scale-105"
+              />
+            </div>
+          ) : (
+            <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+              <span className="text-4xl">🍝</span>
+            </div>
+          )}
+        </div>
 
-      <CardHeader className="flex justify-between items-center text-black px-4 pt-4 pb-0">
-        <h2 className="text-xl font-bold tracking-tight">{recipe.name}</h2>
-      </CardHeader>
+        <CardHeader className="flex justify-between items-center text-black px-4 pt-4 pb-0">
+          <h2 className="text-xl font-bold tracking-tight">{recipe.name}</h2>
+        </CardHeader>
 
-      <CardBody className="flex-1 text-black px-4 py-3">
-        <p className="text-gray-500 text-sm line-clamp-2 mb-3">
-          {recipe.description || 'No description'}
-        </p>
-        <h3 className="font-semibold text-sm mb-2">Ingredients:</h3>
-        <ul className="list-disc pl-5 text-sm text-gray-600 space-y-1 line-clamp-3">
-          {recipe.ingredients.map((ing) => (
-            <li key={ing.id}>
-              {ing.ingredient.name}: {ing.quantity}{' '}
-              {getUnitLabel(ing.ingredient.unit ?? '')}
-            </li>
-          ))}
-        </ul>
-      </CardBody>
+        <CardBody className="flex-1 text-black px-4 py-3">
+          <p className="text-gray-500 text-sm line-clamp-2 mb-3">
+            {recipe.description || 'No description'}
+          </p>
+          <h3 className="font-semibold text-sm mb-2">Ingredients:</h3>
+          <ul className="list-disc pl-5 text-sm text-gray-600 space-y-1 line-clamp-3">
+            {recipe.ingredients.map((ing) => (
+              <li key={ing.id}>
+                {ing.ingredient.name}: {ing.quantity}{' '}
+                {getUnitLabel(ing.ingredient.unit ?? '')}
+              </li>
+            ))}
+          </ul>
+        </CardBody>
+      </Link>
 
       {isAuth && (
         <div className="flex justify-end gap-2 p-4 pt-0">
-          <Link href={`/recipes/${recipe.id}`}>
+          <Link href={`/recipes/${recipe.id}/edit`}>
             <Button color="primary" variant="light" size="sm">
               Edit
             </Button>

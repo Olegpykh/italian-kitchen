@@ -22,20 +22,23 @@ export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   const session = await auth();
+
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-x-hidden`}
     >
-      <body className="min-h-screen flex flex-col">
+      <body className="min-h-screen flex flex-col bg-white overflow-x-hidden">
         <SessionProvider session={session}>
           <Providers>
             <Header />
-            <main className="flex flex-col w-full justify-start items-center flex-1">
+            <main className="flex flex-col w-full min-w-0 justify-start items-center flex-1">
               {children}
             </main>
-            <footer className="flex justify-center items-center border-t h-[60px]">
-              <p className="text-sm text-gray-500">{siteConfig.description}</p>
+            <footer className="flex justify-center items-center border-t border-orange-100/60 h-[64px] bg-gradient-to-r from-orange-50/40 via-white to-amber-50/40">
+              <p className="text-sm text-stone-400 tracking-wide">
+                {siteConfig.description}
+              </p>
             </footer>
           </Providers>
         </SessionProvider>

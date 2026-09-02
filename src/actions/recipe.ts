@@ -20,6 +20,30 @@ export async function getRecipes() {
   }
 }
 
+export async function getRecipeById(id: string) {
+  try {
+    const recipe = await (prisma as any).recipe.findUnique({
+      where: { id },
+      include: {
+        ingredients: {
+          include: {
+            ingredient: true,
+          },
+        },
+      },
+    });
+
+    if (!recipe) {
+      return { success: false, error: 'Recipe not found' };
+    }
+
+    return { success: true, recipe };
+  } catch (error) {
+    console.error('Error fetching recipe:', error);
+    return { success: false, error: 'Failed to fetch recipe' };
+  }
+}
+
 export async function createRecipe(formData: FormData) {
   try {
     const name = formData.get('name') as string;

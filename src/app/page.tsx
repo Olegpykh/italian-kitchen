@@ -1,45 +1,33 @@
-'use client';
-import RecipeCard from '@/components/common/recipe-card';
-import { useRecipeStore } from '@/store/recipe.store';
-import { Button } from '@heroui/react';
-import Link from 'next/link';
-import { useEffect } from 'react';
+import RecipeGrid from '@/components/common/recipe-grid';
+import AddRecipeButton from '@/components/common/add-recipe-button';
+import { getRecipes } from '@/actions/recipe';
 
-export default function Home() {
-  const { recipes, isLoading, error } = useRecipeStore();
-
-  useEffect(() => {
-    useRecipeStore.getState().loadRecipes();
-  }, []);
+export default async function Home() {
+  const result = await getRecipes();
+  const recipes = result.success ? result.recipes : [];
 
   return (
-    <div className="flex flex-col items-center w-full py-16 px-6">
-      <h1 className="text-5xl font-bold tracking-tight mb-3">Recipes</h1>
-      <p className="text-xl text-gray-500 mb-10">
+    <div className="relative flex flex-col items-center w-full min-h-[80vh] py-20 px-6 overflow-hidden">
+      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-orange-50/60 via-white to-amber-50/40" />
+      <div className="absolute top-16 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-orange-200/20 blur-[120px] rounded-full -z-10" />
+
+      <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight mb-3 bg-gradient-to-r from-orange-700 via-red-600 to-amber-600 bg-clip-text text-transparent">
+        Recipes
+      </h1>
+      <p className="text-xl text-stone-500 mb-10 max-w-xl text-center">
         Discover and create authentic Italian recipes
       </p>
 
-      <Link href="/recipes/new" className="mb-12">
-        <Button color="primary" size="lg">
-          + Add Recipe
-        </Button>
-      </Link>
+      <div className="mb-12">
+        <AddRecipeButton />
+      </div>
 
-      {error && <p className="text-red-500 mb-4">{error}</p>}
-      {isLoading && <p className="text-gray-400">Loading...</p>}
-
-      {!isLoading && recipes.length === 0 && (
-        <div className="flex flex-col items-center gap-3 py-20">
-          <span className="text-6xl">🍝</span>
-          <p className="text-xl font-semibold text-gray-600">No recipes yet</p>
-          <p className="text-gray-400">Add your first Italian recipe!</p>
-        </div>
+      {!result.success && (
+        <p className="text-red-500 mb-6 text-sm font-medium">{result.error}</p>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-6xl">
-        {recipes.map((recipe) => (
-          <RecipeCard key={recipe.id} recipe={recipe} />
-        ))}
+      <div className="w-full max-w-6xl">
+        <RecipeGrid initialRecipes={recipes} />
       </div>
     </div>
   );

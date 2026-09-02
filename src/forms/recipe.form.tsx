@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 import { Button, Form, Input, Select, SelectItem } from '@heroui/react';
 import { useIngredientStore } from '@/store/ingredient.store';
 import { useRecipeStore } from '@/store/recipe.store';
@@ -47,6 +47,14 @@ const RecipeForm = ({ initialRecipe }: RecipeFormProps) => {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
+  // Loaded here (not in each caller page) so the ingredient dropdown
+  // always has data regardless of how this form was reached — the
+  // previous approach relied on the parent page remembering to call
+  // this, which /recipes/new did but /recipes/[id] silently didn't.
+  useEffect(() => {
+    useIngredientStore.getState().loadIngredients();
+  }, []);
+
   const handleAddIngredientField = () => {
     if (ingredientFields.length < 10) {
       setIngredientFields([
@@ -91,7 +99,7 @@ const RecipeForm = ({ initialRecipe }: RecipeFormProps) => {
   };
 
   return (
-    <Form className="w-[450px]" action={handleSubmit}>
+    <Form className="w-full max-w-[450px]" action={handleSubmit}>
       {error && <p className="text-red-500 mb-4">{error}</p>}
 
       <Input
