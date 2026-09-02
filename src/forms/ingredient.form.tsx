@@ -43,7 +43,7 @@ const IngredientForm = () => {
   };
 
   return (
-    <Form className="w-full" action={handleSubmit}>
+    <Form className="w-full min-w-0" action={handleSubmit}>
       {error && <p className="text-red-500 mb-4">{error}</p>}
 
       <Input
@@ -63,8 +63,8 @@ const IngredientForm = () => {
         }}
       />
 
-      <div className="flex gap-2 w-full">
-        <div className="w-1/3">
+      <div className="flex flex-col sm:flex-row gap-2 w-full min-w-0">
+        <div className="w-full sm:w-1/3 min-w-0">
           <Select
             isRequired
             name="category"
@@ -88,7 +88,7 @@ const IngredientForm = () => {
           </Select>
         </div>
 
-        <div className="w-1/3">
+        <div className="w-full sm:w-1/3 min-w-0">
           <Select
             isRequired
             name="unit"
@@ -110,7 +110,7 @@ const IngredientForm = () => {
           </Select>
         </div>
 
-        <div className="w-1/3">
+        <div className="w-full sm:w-1/3 min-w-0">
           <Input
             isRequired
             name="pricePerUnit"

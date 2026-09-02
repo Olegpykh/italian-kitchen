@@ -2,6 +2,7 @@ generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
 }
+
 datasource db {
   provider = "postgresql"
 }
@@ -10,14 +11,14 @@ model User {
   id            String    @id @default(uuid())
   email         String    @unique
   password      String?
-  name          String?
-  emailVerified DateTime? @map("email_verified")
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
-  recipes       Recipe[]
   createdAt     DateTime  @default(now()) @map("created_at")
   updatedAt     DateTime  @updatedAt @map("updated_at")
+  emailVerified DateTime? @map("email_verified")
+  image         String?
+  name          String?
+  accounts      Account[]
+  recipes       Recipe[]
+  sessions      Session[]
 
   @@map("users")
 }
@@ -28,12 +29,12 @@ model Account {
   type              String
   provider          String
   providerAccountId String  @map("provider_account_id")
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -62,14 +63,14 @@ model VerificationToken {
 
 model Recipe {
   id          String             @id @default(uuid())
-  name        String
   description String?
   imageUrl    String?
   authorId    String?
-  author      User?              @relation(fields: [authorId], references: [id])
-  ingredients RecipeIngredient[]
   createdAt   DateTime           @default(now()) @map("created_at")
   updatedAt   DateTime           @updatedAt @map("updated_at")
+  name        String
+  ingredients RecipeIngredient[]
+  author      User?              @relation(fields: [authorId], references: [id])
 
   @@map("recipes")
 }
@@ -79,8 +80,8 @@ model RecipeIngredient {
   recipeId     String     @map("recipe_id")
   ingredientId String     @map("ingredient_id")
   quantity     Float
-  recipe       Recipe     @relation(fields: [recipeId], references: [id], onDelete: Cascade)
   ingredient   Ingredient @relation(fields: [ingredientId], references: [id])
+  recipe       Recipe     @relation(fields: [recipeId], references: [id], onDelete: Cascade)
 
   @@map("recipe_ingredients")
 }
@@ -92,9 +93,9 @@ model Ingredient {
   unit         String?
   pricePerUnit Float?
   description  String?
-  recipes      RecipeIngredient[]
   createdAt    DateTime           @default(now()) @map("created_at")
   updatedAt    DateTime           @updatedAt @map("updated_at")
+  recipes      RecipeIngredient[]
 
   @@map("ingredients")
 }

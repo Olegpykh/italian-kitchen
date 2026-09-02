@@ -3,15 +3,7 @@
 import { CATEGORY_OPTIONS, UNIT_OPTIONS } from '@/constants/select-options';
 import { useAuthStore } from '@/store/auth.store';
 import { useIngredientStore } from '@/store/ingredient.store';
-import {
-  Button,
-  Table,
-  TableBody,
-  TableCell,
-  TableColumn,
-  TableHeader,
-  TableRow,
-} from '@heroui/react';
+import { Button } from '@heroui/react';
 
 const IngredientsTable = () => {
   const { ingredients, removeIngredient, isLoading } = useIngredientStore();
@@ -47,41 +39,46 @@ const IngredientsTable = () => {
     return <p className="mt-4 text-gray-400">Loading...</p>;
   }
 
+  if (ingredients.length === 0) {
+    return <p className="mt-4 text-gray-400">No ingredients yet.</p>;
+  }
+
   return (
-    <Table aria-label="Ingredients list">
-      <TableHeader>
-        <TableColumn>Name</TableColumn>
-        <TableColumn>Category</TableColumn>
-        <TableColumn>Unit</TableColumn>
-        <TableColumn>Price per unit</TableColumn>
-        <TableColumn>Description</TableColumn>
-        <TableColumn>Actions</TableColumn>
-      </TableHeader>
-      <TableBody>
+    <div className="w-full min-w-0">
+      <h2 className="text-xl font-semibold mb-3">Ingredients</h2>
+      <ul className="space-y-2">
         {ingredients.map((ingredient) => (
-          <TableRow key={ingredient.id}>
-            <TableCell>{ingredient.name}</TableCell>
-            <TableCell>{getCategoryLabel(ingredient.category ?? '')}</TableCell>
-            <TableCell>{getUnitLabel(ingredient.unit ?? '')}</TableCell>
-            <TableCell>
-              {ingredient.pricePerUnit !== null
-                ? `${ingredient.pricePerUnit} €`
-                : '-'}
-            </TableCell>
-            <TableCell>{ingredient.description || '-'}</TableCell>
-            <TableCell>
-              <Button
-                color="danger"
-                size="sm"
-                onPress={() => handleDelete(ingredient.id)}
-              >
-                Delete
-              </Button>
-            </TableCell>
-          </TableRow>
+          <li
+            key={ingredient.id}
+            className="flex items-start justify-between gap-3 text-gray-700"
+          >
+            <span className="min-w-0">
+              <span className="text-black">{ingredient.name}</span>
+              {' — '}
+              {getCategoryLabel(ingredient.category ?? '')},{' '}
+              {getUnitLabel(ingredient.unit ?? '')}
+              {ingredient.pricePerUnit !== null && (
+                <> · {ingredient.pricePerUnit} €</>
+              )}
+              {ingredient.description && (
+                <span className="block text-sm text-gray-400">
+                  {ingredient.description}
+                </span>
+              )}
+            </span>
+            <Button
+              color="danger"
+              variant="light"
+              size="sm"
+              onPress={() => handleDelete(ingredient.id)}
+              className="shrink-0"
+            >
+              Delete
+            </Button>
+          </li>
         ))}
-      </TableBody>
-    </Table>
+      </ul>
+    </div>
   );
 };
 

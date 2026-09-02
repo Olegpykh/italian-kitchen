@@ -44,6 +44,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           return { id: user.id, email: user.email };
         } catch (error) {
           if (error instanceof ZodError) return null;
+
+          console.error('Auth authorize error:', error);
           return null;
         }
       },
